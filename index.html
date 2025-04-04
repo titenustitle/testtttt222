@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeSlot Note</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-clock"></i>
+                <h2>TimeSlot Note</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </li>
+                <li data-page="calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Calendar</span>
+                </li>
+                <li data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </li>
+            </ul>
+            <div class="theme-toggle">
+                <i class="fas fa-moon"></i>
+                <span>Dark Mode</span>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Home Page -->
+            <div class="page active" id="home-page">
+                <div class="page-header">
+                    <h1>Today's Time Slots</h1>
+                    <div class="date-display">
+                        <button id="prevDayBtn"><i class="fas fa-chevron-left"></i></button>
+                        <span id="currentDate">Loading...</span>
+                        <button id="nextDayBtn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="start-time-container">
+                    <label for="startTime">Start Time:</label>
+                    <input type="time" id="startTime" value="09:00">
+                    <button id="setTimeBtn">Set</button>
+                </div>
+
+                <div id="timeSlotsContainer">
+                    <!-- Time slots will be generated here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Notes Page -->
+            <div id="notes-page" class="page">
+                <div class="notes-container">
+                    <!-- Sidebar -->
+                    <div class="notes-sidebar">
+                        <div class="sidebar-header">
+                            <button id="toggleSidebar" class="icon-btn">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div class="search-container">
+                                <input type="text" id="noteSearch" placeholder="Search notes...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Pinned Notes -->
+                        <div class="pinned-notes">
+                            <h3><i class="fas fa-thumbtack"></i> Pinned</h3>
+                            <div id="pinnedNotesList"></div>
+                        </div>
+                        
+                        <!-- Tags -->
+                        <div class="tags-section">
+                            <h3><i class="fas fa-tags"></i> Tags</h3>
+                            <div id="tagsList"></div>
+                        </div>
+                        
+                        <!-- Folders -->
+                        <div class="folders-section">
+                            <h3><i class="fas fa-folder"></i> Folders</h3>
+                            <div id="folderTree"></div>
+                        </div>
+                    </div>
+
+                    <!-- Main Editor Area -->
+                    <div class="editor-container">
+                        <div class="editor-header">
+                            <div class="editor-controls">
+                                <button id="toggleFocusMode" class="icon-btn" title="Toggle Focus Mode">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button id="pinNote" class="icon-btn" title="Pin Note">
+                                    <i class="fas fa-thumbtack"></i>
+                                </button>
+                                <div class="format-controls">
+                                    <button class="format-btn" data-format="bold" title="Bold">
+                                        <i class="fas fa-bold"></i>
+                                    </button>
+                                    <button class="format-btn" data-format="italic" title="Italic">
+                                        <i class="fas fa-italic"></i>
+                                    </button>
+                                    <button class="format-btn" data-format="heading" title="Heading">
+                                        <i class="fas fa-heading"></i>
+                                    </button>
+                                    <button class="format-btn" data-format="list" title="List">
+                                        <i class="fas fa-list"></i>
+                                    </button>
+                                    <button class="format-btn" data-format="checkbox" title="Task List">
+                                        <i class="fas fa-check-square"></i>
+                                    </button>
+                                    <button class="format-btn" data-format="link" title="Link">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                    <button class="format-btn" data-format="image" title="Image">
+                                        <i class="fas fa-image"></i>
+                                    </button>
+                                    <button class="format-btn" data-format="audio" title="Voice Note">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="editor-meta">
+                                <div id="tagInput" class="tag-input" contenteditable="true" placeholder="Add tags..."></div>
+                                <span id="saveIndicator" class="save-indicator saved">Saved ✓</span>
+                            </div>
+                        </div>
+
+                        <div class="editor-wrapper">
+                            <!-- Split View: Editor and Preview -->
+                            <div class="split-view">
+                                <!-- Markdown Editor -->
+                                <div id="markdownEditor" class="markdown-editor" contenteditable="true" 
+                                     placeholder="Start typing your notes here..."></div>
+                                
+                                <!-- Preview Panel -->
+                                <div id="previewPanel" class="preview-panel"></div>
+                            </div>
+
+                            <!-- Attachments Area -->
+                            <div class="attachments-area">
+                                <div id="attachmentsList"></div>
+                                <div class="attachment-controls">
+                                    <button id="addAttachment" class="icon-btn">
+                                        <i class="fas fa-paperclip"></i> Add Attachment
+                                    </button>
+                                    <button id="recordVoice" class="icon-btn">
+                                        <i class="fas fa-microphone"></i> Record Voice
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="settings-panel" id="settingsPanel">
+                    <div class="settings-header">
+                        <h3>Editor Settings</h3>
+                        <button id="closeSettings" class="icon-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="settings-content">
+                        <div class="setting-group">
+                            <label>Font Family</label>
+                            <select id="fontFamily">
+                                <option value="system-ui">System Default</option>
+                                <option value="serif">Serif</option>
+                                <option value="monospace">Monospace</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label>Font Size</label>
+                            <input type="range" id="fontSize" min="12" max="24" value="16">
+                        </div>
+                        <div class="setting-group">
+                            <label>Theme</label>
+                            <div class="theme-options">
+                                <button class="theme-btn active" data-theme="light">Light</button>
+                                <button class="theme-btn" data-theme="dark">Dark</button>
+                                <button class="theme-btn" data-theme="sepia">Sepia</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Page -->
+            <div id="calendar-page" class="page">
+                <div class="page-header">
+                    <h1>Calendar</h1>
+                </div>
+                <div class="calendar-container">
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button id="prevMonth" class="calendar-nav-btn">&#8592;</button>
+                            <h2 id="monthYear">April 2025</h2>
+                            <button id="nextMonth" class="calendar-nav-btn">&#8594;</button>
+                        </div>
+                        <div class="calendar-days">
+                            <div>Sun</div>
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                        </div>
+                        <div class="calendar-dates" id="calendarDates">
+                            <!-- Dates will be dynamically filled -->
+                        </div>
+                    </div>
+                    <div class="calendar-legend">
+                        <div class="legend-item">
+                            <span class="legend-color today"></span>
+                            <span>Today</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color selected"></span>
+                            <span>Selected</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color holiday"></span>
+                            <span>Holiday</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color has-notes"></span>
+                            <span>Has Notes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="page" id="settings-page">
+                <div class="page-header">
+                    <h1>Settings</h1>
+                </div>
+                <div class="settings-container">
+                    <div class="setting-item">
+                        <h3>Theme</h3>
+                        <div class="theme-options">
+                            <button class="theme-btn active" data-theme="light">Light</button>
+                            <button class="theme-btn" data-theme="dark">Dark</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <h3>Default Start Time</h3>
+                        <input type="time" id="defaultStartTime" value="09:00">
+                        <button id="saveDefaultTime">Save</button>
+                    </div>
+                    <div class="setting-item">
+                        <h3>Data Management</h3>
+                        <button id="exportData">Export Data</button>
+                        <button id="importData">Import Data</button>
+                        <button id="clearData" class="danger">Clear All Data</button>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Storage Location</h3>
+                        <div class="storage-location-container">
+                            <div class="input-group">
+                                <input type="text" id="storageLocation" placeholder="Select a folder to save your notes" readonly>
+                                <button id="browseLocation" class="primary-btn">
+                                    <i class="fas fa-folder-open"></i> Choose Folder
+                                </button>
+                            </div>
+                            <p class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Choose a folder on your device to save notes. Once selected, notes will be automatically saved to this location.
+                                If no folder is selected, notes will be saved in your browser's storage.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
